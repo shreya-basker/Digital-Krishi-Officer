@@ -111,8 +111,8 @@ To build a **nation-scale Digital Krishi Officer** that empowers farmers with ti
 
 ## 👥 Team
 
-**Team Name:** Code Warriors  
-**Hackathon:** Smart India Hackathon 2025  
+**Team Name:** QuadForce  
+**Hackathon:** Smart India Hackathon 2025 
 **Theme:** Agriculture, Food Tech & Rural Development  
 
 ---
