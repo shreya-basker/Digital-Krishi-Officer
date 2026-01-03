@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farmer Dashboard - Digital Krishi Mitra</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0; padding: 0;
+    background: linear-gradient(to bottom, #e8f5e9, #f4f9f4);
+    display: flex; flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: #2e7d32;
+    color: white;
+    flex-wrap: wrap;
+  }
+  header .profile { display: flex; align-items: center; gap: 10px; }
+  header img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid white; }
+  header button { padding: 6px 14px; border: none; border-radius: 30px; background: #d9534f; color: white; cursor: pointer; font-weight: bold; transition: 0.3s; }
+  header button:hover { background: #c9302c; }
+
+  main { flex: 1; padding: 15px 20px; display: flex; flex-direction: column; gap: 20px; }
+
+  /* AI Query Card */
+  #aiQueryCard {
+    background: #ffffff; padding: 25px; border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; transition: 0.3s; cursor: pointer;
+  }
+  #aiQueryCard:hover { transform: scale(1.05); box-shadow: 0 6px 14px rgba(0,0,0,0.2); }
+  #aiQueryCard h2 { margin: 0; color: #2e7d32; }
+
+  /* Dropdown Menu */
+  .dropdown { position: relative; display: inline-block; margin-left: auto; }
+  .dropbtn { background: #2e7d32; color: white; padding: 10px 16px; font-size: 14px; border: none; border-radius: 50px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.3s; }
+  .dropbtn:hover { background: #256608; }
+  .dropdown-content { display: none; position: absolute; right: 0; background-color: #f1f1f1; min-width: 160px; border-radius: 12px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; overflow: hidden; }
+  .dropdown-content button { width: 100%; padding: 10px; border: none; background: none; text-align: left; cursor: pointer; transition: 0.3s; color: #2e7d32; }
+  .dropdown-content button:hover { background: #dcedc8; }
+  .dropdown:hover .dropdown-content { display: block; }
+
+  /* Quick Stats Cards */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
+  .stat-card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); text-align: center; }
+  .stat-card h3 { margin: 0; color: #2e7d32; font-size: 1rem; }
+  .stat-card p { margin: 5px 0 0; font-size: 0.9rem; color: #555; }
+
+  /* Live Prices */
+  #livePrices { background: #ffffffcc; padding: 12px 15px; border-radius: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); }
+  #livePrices h3 { margin-top: 0; color: #2e7d32; }
+  #livePrices .price-card { display: inline-block; margin-right: 20px; padding: 8px 12px; background: #e8f5e9; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 600; }
+
+  /* Tips Carousel */
+  #tipsCarousel { background: #ffffffcc; padding: 15px; border-radius: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  #tipsCarousel img { width: 100%; max-height: 200px; border-radius: 12px; object-fit: contain; }
+  #tipsCarousel p { margin: 0; color: #2e7d32; font-weight: 600; text-align: center; }
+
+  /* Announcements */
+  #announcements { background: #ffffffcc; padding: 15px; border-radius: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); }
+  #announcements h3 { margin-top: 0; color: #2e7d32; }
+  #announcements ul { padding-left: 20px; margin: 8px 0 0; }
+
+  footer { text-align: center; padding: 12px; background: #f0f0f0; font-size: 12px; color: #555; }
+
+  @media (max-width: 480px){ .dropbtn { font-size: 12px; padding: 8px 12px; } .stats-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="profile">
+    <img src="https://res.cloudinary.com/dxt4kt6b3/image/upload/v1756712892/indian-farmer-with-crops-illustration-for-your-design-vector_d5jc5b.jpg" alt="Profile Avatar" id="profileAvatar">
+    <span id="profileName">Farmer</span>
+  </div>
+
+  <div class="dropdown">
+    <button class="dropbtn">Menu ▼</button>
+    <div class="dropdown-content">
+      <button id="schemes">📜 Government Schemes</button>
+      <button id="mandi">💹 Mandi Prices</button>
+      <button id="tutorials">🎥 Tutorials</button>
+      <button id="contactOfficer">📞 Contact Officer</button>
+    </div>
+  </div>
+
+  <button onclick="logout()">Logout</button>
+</header>
+
+<main>
+  <!-- AI Query -->
+  <div id="aiQueryCard">
+    <h2>📝 Ask AI Query</h2>
+    <p>Click here to get answers for your farming questions</p>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="stats-grid">
+    <div class="stat-card"><h3>12</h3><p>Total Queries</p></div>
+    <div class="stat-card"><h3>3</h3><p>Pending Responses</p></div>
+    <div class="stat-card"><h3>₹27/kg</h3><p>Avg Rice Price</p></div>
+    <div class="stat-card"><h3>2</h3><p>Active Schemes</p></div>
+  </div>
+
+  <div class="card" style="background:#ffffffcc; padding:15px; border-radius:12px; box-shadow:0 3px 8px rgba(0,0,0,0.1);">
+    <h3 style="color:#2e7d32;">🌤️ Weather Forecast - Yehlanka</h3>
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <div style="flex:1; text-align:center; background:#e8f5e9; border-radius:10px; padding:10px;">
+        <h4>Mon</h4><p>☀️ Sunny</p><p>30°C / 22°C</p><p>Remember to water your crops today!</p>
+      </div>
+      <div style="flex:1; text-align:center; background:#e8f5e9; border-radius:10px; padding:10px;">
+        <h4>Tue</h4><p>🌦️ Cloudy</p><p>28°C / 21°C</p><p>Keep a lookout for pests!</p>
+      </div>
+      <div style="flex:1; text-align:center; background:#e8f5e9; border-radius:10px; padding:10px;">
+        <h4>Wed</h4><p>🌧️ Rainy</p><p>25°C / 20°C</p><p>Do not use fertilizer today!</p>
+      </div>
+      <div style="flex:1; text-align:center; background:#e8f5e9; border-radius:10px; padding:10px;">
+        <h4>Thu</h4><p>⛅ Partly Cloudy</p><p>29°C / 21°C</p><p>Right day for weed removal! </p>
+      </div>
+      <div style="flex:1; text-align:center; background:#e8f5e9; border-radius:10px; padding:10px;">
+        <h4>Fri</h4><p>☀️ Sunny</p><p>31°C / 23°C</p><p>Remember to water your crops today!</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Live Prices -->
+  <div id="livePrices">
+    <h3>Live Prices</h3>
+    <div id="livePricesContainer"></div>
+  </div>
+
+  <!-- Tips Carousel -->
+  <div id="tipsCarousel">
+    <img id="tipImage" src="" alt="Tip Image">
+    <p id="tipText"></p>
+  </div>
+
+  <!-- Announcements -->
+  <div id="announcements">
+    <h3>Announcements</h3>
+    <ul>
+      <li>Weather Alert: Heavy rain expected in Kerala</li>
+      <li>New scheme: Subsidy for Organic Farming</li>
+      <li>Market Alert: Rice price increasing</li>
+    </ul>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 Digital Krishi Mitra | All Rights Reserved
+</footer>
+
+<!-- Firebase -->
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  // Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDNCIkLl0TUK6NDeFUYg9JczI_m_H2KUNI",
+    authDomain: "digital-krishi-officer-9b3f4.firebaseapp.com",
+    projectId: "digital-krishi-officer-9b3f4",
+    storageBucket: "digital-krishi-officer-9b3f4.appspot.com",
+    messagingSenderId: "552837625635",
+    appId: "1:552837625635:web:eedd75eecfb5a823d27e96"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  // Navigation
+  document.getElementById("aiQueryCard").onclick = () => location.href = "query.html";
+  document.getElementById("schemes").onclick = () => location.href = "schemes.html";
+  document.getElementById("mandi").onclick = () => location.href = "mandi.html";
+  document.getElementById("tutorials").onclick = () => location.href = "tutorials.html";
+  document.getElementById("contactOfficer").onclick = () => location.href = "contact.html";
+
+  // Tips Carousel
+  const tips = [
+    { img: "https://res.cloudinary.com/dxt4kt6b3/image/upload/v1756714390/Farmers_ijeyuh.jpg", tip: "Water crops early morning to reduce evaporation." },
+    { img: "https://res.cloudinary.com/dxt4kt6b3/image/upload/v1756714390/Organic-Farming-1024x576_w610t3.webp", tip: "Use organic fertilizers for better yield." },
+    { img: "https://res.cloudinary.com/dxt4kt6b3/image/upload/v1756714389/images_1_vwi35y.jpg", tip: "Rotate crops to maintain soil fertility." }
+  ];
+
+  let currentTip = 0;
+  const tipImage = document.getElementById("tipImage");
+  const tipText = document.getElementById("tipText");
+
+  function showTip() {
+    tipImage.src = tips[currentTip].img;
+    tipText.innerText = tips[currentTip].tip;
+  }
+
+  showTip();
+  setInterval(() => {
+    currentTip = (currentTip + 1) % tips.length;
+    showTip();
+  }, 5000);
+
+  // Live Prices
+  const livePricesData = [
+    { crop:"Rice", price:25, contact:"9876543210" },
+    { crop:"Wheat", price:30, contact:"8765432109" },
+    { crop:"Maize", price:20, contact:"7654321098" },
+    { crop:"Sugarcane", price:18, contact:"6543210987" }
+  ];
+
+  const livePricesContainer = document.getElementById("livePricesContainer");
+  livePricesData.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "price-card";
+    card.innerText = `${item.crop}: ₹${item.price}/kg (Mandi: ${item.contact})`;
+    livePricesContainer.appendChild(card);
+  });
+
+  // Logout
+  window.logout = function () {
+    if (confirm("Are you sure you want to logout?")) {
+      auth.signOut().then(() => {
+        localStorage.clear();
+        location.href = "index.html";
+      });
+    }
+  };
+
+});
+</script>
+</body>
+</html>

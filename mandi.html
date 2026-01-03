@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mandi Prices - Digital Krishi Mitra</title>
+<style>
+  body { font-family:'Poppins', sans-serif; margin:0; padding:0; background:#f4f9f4; }
+  header { background:#2e7d32; color:white; padding:15px; text-align:center; font-size:1.5rem; }
+  main { padding:15px; }
+  
+  input, select {
+    width:100%; padding:10px; margin-bottom:15px; border-radius:10px; border:1px solid #ccc; font-size:1rem;
+  }
+
+  .mandi-card {
+    background:white; padding:15px; margin-bottom:15px; border-radius:12px; box-shadow:0 3px 8px rgba(0,0,0,0.1);
+  }
+  .mandi-card h3 { margin:0 0 5px; color:#2e7d32; }
+  .mandi-card p { margin:3px 0; font-size:0.95rem; color:#555; }
+  .contact-btn {
+    margin-top:8px; padding:8px 16px; background:#2e7d32; color:white; border:none; border-radius:30px; cursor:pointer;
+    transition:0.3s;
+  }
+  .contact-btn:hover { background:#256608; }
+
+  button.back { display:block; margin:15px auto; padding:10px 20px; background:#2e7d32; color:white; border:none; border-radius:30px; cursor:pointer; transition:0.3s; }
+  button.back:hover { background:#256608; }
+</style>
+</head>
+<body>
+
+<header>💹 Mandi Prices</header>
+
+<main>
+  <select id="stateSelect">
+    <option value="">-- Select State --</option>
+    <option value="Karnataka">Karnataka</option>
+    <option value="Maharashtra">Maharashtra</option>
+    <option value="Punjab">Punjab</option>
+    <option value="Uttar Pradesh">Uttar Pradesh</option>
+    <!-- Add other states as needed -->
+  </select>
+
+  <select id="cropSelect">
+    <option value="">-- Select Crop --</option>
+    <option value="Rice">Rice</option>
+    <option value="Wheat">Wheat</option>
+    <option value="Maize">Maize</option>
+    <option value="Sugarcane">Sugarcane</option>
+    <!-- Add other crops as needed -->
+  </select>
+
+  <div id="mandiContainer"></div>
+
+  <button class="back" onclick="window.location.href='dashboard.html'">⬅ Back to Dashboard</button>
+</main>
+
+<script>
+const mandiData = {
+  "Karnataka":[
+    {city:"Bangalore", crop:"Rice", price:"₹35/kg", contact:"+919876543210"},
+    {city:"Mysore", crop:"Wheat", price:"₹30/kg", contact:"+919876543211"}
+  ],
+  "Maharashtra":[
+    {city:"Pune", crop:"Sugarcane", price:"₹28/kg", contact:"+919812345678"},
+    {city:"Nagpur", crop:"Rice", price:"₹34/kg", contact:"+919812345679"}
+  ],
+  "Punjab":[
+    {city:"Ludhiana", crop:"Wheat", price:"₹32/kg", contact:"+919812345680"},
+    {city:"Amritsar", crop:"Rice", price:"₹36/kg", contact:"+919812345681"}
+  ],
+  "Uttar Pradesh":[
+    {city:"Lucknow", crop:"Maize", price:"₹25/kg", contact:"+919812345682"},
+    {city:"Kanpur", crop:"Wheat", price:"₹31/kg", contact:"+919812345683"}
+  ]
+};
+
+const stateSelect = document.getElementById("stateSelect");
+const cropSelect = document.getElementById("cropSelect");
+const mandiContainer = document.getElementById("mandiContainer");
+
+function showMandi() {
+  const state = stateSelect.value;
+  const crop = cropSelect.value;
+  mandiContainer.innerHTML = "";
+
+  if(!state) return;
+
+  const list = mandiData[state].filter(m => !crop || m.crop === crop);
+
+  if(list.length === 0) {
+    mandiContainer.innerHTML = "<p>No data available for this selection.</p>";
+    return;
+  }
+
+  list.forEach(mandi => {
+    const card = document.createElement("div");
+    card.className = "mandi-card";
+    card.innerHTML = `
+      <h3>${mandi.city}</h3>
+      <p>Crop: ${mandi.crop}</p>
+      <p>Price: <strong>${mandi.price}</strong></p>
+      <p>Contact: <a href="tel:${mandi.contact}">${mandi.contact}</a></p>
+      <button class="contact-btn" onclick="window.location.href='tel:${mandi.contact}'">Call Mandi Officer</button>
+    `;
+    mandiContainer.appendChild(card);
+  });
+}
+
+stateSelect.addEventListener("change", showMandi);
+cropSelect.addEventListener("change", showMandi);
+</script>
+
+</body>
+</html>

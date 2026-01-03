@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farming Tutorials - Digital Krishi Mitra</title>
+<style>
+  body { font-family:'Poppins', sans-serif; margin:0; padding:0; background:#f4f9f4; }
+  header { background:#2e7d32; color:white; padding:15px; text-align:center; font-size:1.5rem; }
+  main { padding:15px; display:grid; gap:15px; }
+  
+  .video-card {
+    background:white; padding:10px; border-radius:12px; box-shadow:0 3px 8px rgba(0,0,0,0.1);
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .video-card img { width:100%; border-radius:12px; }
+  .video-card h3 { margin:10px 0 5px; color:#2e7d32; text-align:center; }
+  .video-card a {
+    margin-top:8px; padding:8px 16px; background:#2e7d32; color:white; border-radius:30px; text-decoration:none; transition:0.3s;
+  }
+  .video-card a:hover { background:#256608; }
+
+  button.back { display:block; margin:15px auto; padding:10px 20px; background:#2e7d32; color:white; border:none; border-radius:30px; cursor:pointer; transition:0.3s; }
+  button.back:hover { background:#256608; }
+</style>
+</head>
+<body>
+
+<header>🎥 Farming Tutorial Videos</header>
+<main id="videosContainer">
+  <!-- Video cards injected here -->
+</main>
+<button class="back" onclick="window.location.href='dashboard.html'">⬅ Back to Dashboard</button>
+
+<script>
+const videos = [
+  {title:"Organic Farming Basics", thumb:"https://cdn.pixabay.com/photo/2016/06/06/17/05/farm-1437710_1280.jpg", link:"https://www.youtube.com/watch?v=video1"},
+  {title:"Irrigation Techniques", thumb:"https://cdn.pixabay.com/photo/2016/11/29/06/16/farming-1867982_1280.jpg", link:"https://www.youtube.com/watch?v=video2"},
+  {title:"Crop Rotation Guide", thumb:"https://cdn.pixabay.com/photo/2017/08/07/15/49/farm-2608827_1280.jpg", link:"https://www.youtube.com/watch?v=video3"},
+  {title:"Pest Management Tips", thumb:"https://cdn.pixabay.com/photo/2016/06/06/17/05/farm-1437710_1280.jpg", link:"https://www.youtube.com/watch?v=video4"}
+];
+
+const container = document.getElementById("videosContainer");
+
+videos.forEach(video => {
+  const card = document.createElement("div");
+  card.className = "video-card";
+  card.innerHTML = `
+    <img src="${video.thumb}" alt="${video.title}">
+    <h3>${video.title}</h3>
+    <a href="${video.link}" target="_blank">Watch Video</a>
+  `;
+  container.appendChild(card);
+});
+</script>
+
+</body>
+</html>

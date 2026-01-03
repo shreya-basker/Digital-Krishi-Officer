@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Government Schemes - Digital Krishi Mitra</title>
+<style>
+  body { font-family:'Poppins', sans-serif; margin:0; padding:0; background:#f4f9f4; }
+  header { background:#2e7d32; color:white; padding:15px; text-align:center; font-size:1.5rem; }
+  main { padding:15px; }
+  
+  .scheme-card {
+    background:white; padding:15px; margin-bottom:15px; border-radius:12px; box-shadow:0 3px 8px rgba(0,0,0,0.1);
+  }
+  .scheme-card h3 { margin:0 0 5px; color:#2e7d32; }
+  .scheme-card p { margin:5px 0; color:#555; font-size:0.95rem; }
+  .scheme-card a {
+    display:inline-block; margin-top:8px; padding:8px 16px; background:#2e7d32; color:white; border-radius:30px; text-decoration:none; transition:0.3s;
+  }
+  .scheme-card a:hover { background:#256608; }
+  
+  button.back { display:block; margin:15px auto; padding:10px 20px; background:#2e7d32; color:white; border:none; border-radius:30px; cursor:pointer; transition:0.3s; }
+  button.back:hover { background:#256608; }
+</style>
+</head>
+<body>
+
+<header>📜 Government Schemes</header>
+<main id="schemesContainer">
+  <!-- Cards will be injected here -->
+</main>
+<button class="back" onclick="window.location.href='dashboard.html'">⬅ Back to Dashboard</button>
+
+<script>
+const schemes = [
+  {name:"Subsidy for Organic Farming", desc:"Financial support for farmers adopting organic methods.", link:"https://example.com/organic-subsidy"},
+  {name:"Free Soil Testing Program", desc:"Get your soil tested at local labs for free.", link:"https://example.com/soil-testing"},
+  {name:"Irrigation Assistance Scheme", desc:"Support for installing efficient irrigation systems.", link:"https://example.com/irrigation"},
+  {name:"Crop Insurance Scheme", desc:"Protect your crops from natural calamities.", link:"https://example.com/crop-insurance"}
+];
+
+const container = document.getElementById("schemesContainer");
+
+schemes.forEach(scheme => {
+  const card = document.createElement("div");
+  card.className = "scheme-card";
+  card.innerHTML = `
+    <h3>${scheme.name}</h3>
+    <p>${scheme.desc}</p>
+    <a href="${scheme.link}" target="_blank">Learn More</a>
+  `;
+  container.appendChild(card);
+});
+</script>
+
+</body>
+</html>

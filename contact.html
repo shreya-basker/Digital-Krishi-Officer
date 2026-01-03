@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Krishi Officer - Digital Krishi Mitra</title>
+<style>
+  body { font-family: 'Poppins', sans-serif; margin:0; padding:0; background:#f4f9f4; }
+  header { background:#2e7d32; color:white; padding:15px; text-align:center; font-size:1.5rem; }
+  main { padding:15px; }
+
+  select { width:100%; padding:10px; border-radius:10px; border:1px solid #ccc; margin-bottom:15px; font-size:1rem; }
+
+  .officer-card { background:white; padding:15px; margin-bottom:15px; border-radius:12px; box-shadow:0 3px 8px rgba(0,0,0,0.1); }
+  .officer-card h3 { margin:0 0 5px; color:#2e7d32; }
+  .officer-card p { margin:0; font-size:0.95rem; color:#555; }
+
+  .contact-btn { margin-top:10px; padding:8px 16px; background:#2e7d32; color:white; border:none; border-radius:30px; cursor:pointer; transition:0.3s; }
+  .contact-btn:hover { background:#256608; }
+
+  button.back { display:block; margin:15px auto; padding:10px 20px; background:#2e7d32; color:white; border:none; border-radius:30px; cursor:pointer; transition:0.3s; }
+  button.back:hover { background:#256608; }
+</style>
+</head>
+<body>
+
+<header>📞 Contact Krishi Officer</header>
+
+<main>
+  <select id="stateSelect">
+    <option value="">-- Select Your State/UT --</option>
+    <option value="Andhra Pradesh">Andhra Pradesh</option>
+    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+    <option value="Assam">Assam</option>
+    <option value="Bihar">Bihar</option>
+    <option value="Chhattisgarh">Chhattisgarh</option>
+    <option value="Goa">Goa</option>
+    <option value="Gujarat">Gujarat</option>
+    <option value="Haryana">Haryana</option>
+    <option value="Himachal Pradesh">Himachal Pradesh</option>
+    <option value="Jharkhand">Jharkhand</option>
+    <option value="Karnataka">Karnataka</option>
+    <option value="Kerala">Kerala</option>
+    <option value="Madhya Pradesh">Madhya Pradesh</option>
+    <option value="Maharashtra">Maharashtra</option>
+    <option value="Manipur">Manipur</option>
+    <option value="Meghalaya">Meghalaya</option>
+    <option value="Mizoram">Mizoram</option>
+    <option value="Nagaland">Nagaland</option>
+    <option value="Odisha">Odisha</option>
+    <option value="Punjab">Punjab</option>
+    <option value="Rajasthan">Rajasthan</option>
+    <option value="Sikkim">Sikkim</option>
+    <option value="Tamil Nadu">Tamil Nadu</option>
+    <option value="Telangana">Telangana</option>
+    <option value="Tripura">Tripura</option>
+    <option value="Uttar Pradesh">Uttar Pradesh</option>
+    <option value="Uttarakhand">Uttarakhand</option>
+    <option value="West Bengal">West Bengal</option>
+    <option value="Delhi">Delhi</option>
+    <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+    <option value="Ladakh">Ladakh</option>
+    <option value="Chandigarh">Chandigarh</option>
+    <option value="Puducherry">Puducherry</option>
+    <option value="Andaman & Nicobar Islands">Andaman & Nicobar Islands</option>
+    <option value="Dadra & Nagar Haveli">Dadra & Nagar Haveli</option>
+    <option value="Daman & Diu">Daman & Diu</option>
+    <option value="Lakshadweep">Lakshadweep</option>
+  </select>
+
+  <div id="officerContainer"></div>
+
+  <button class="back" onclick="window.location.href='dashboard.html'">⬅ Back to Dashboard</button>
+</main>
+
+<script>
+const officers = {
+  "Andhra Pradesh":[{name:"Ramesh Kumar",location:"Vijayawada",phone:"+919876543210"}],
+  "Arunachal Pradesh":[{name:"Tsering Dorjee",location:"Itanagar",phone:"+919812345001"}],
+  "Assam":[{name:"Anil Das",location:"Guwahati",phone:"+919812345002"}],
+  "Bihar":[{name:"Rajiv Kumar",location:"Patna",phone:"+919812345003"}],
+  "Chhattisgarh":[{name:"Sunita Sahu",location:"Raipur",phone:"+919812345004"}],
+  "Goa":[{name:"Miguel Fernandes",location:"Panaji",phone:"+919812345005"}],
+  "Gujarat":[{name:"Bhavesh Patel",location:"Ahmedabad",phone:"+919812345006"}],
+  "Haryana":[{name:"Rohit Sharma",location:"Chandigarh",phone:"+919812345007"}],
+  "Himachal Pradesh":[{name:"Anita Thakur",location:"Shimla",phone:"+919812345008"}],
+  "Jharkhand":[{name:"Suman Singh",location:"Ranchi",phone:"+919812345009"}],
+  "Karnataka":[{name:"Priya Singh",location:"Bangalore",phone:"+919812345010"}],
+  "Kerala":[{name:"Anjali Menon",location:"Thiruvananthapuram",phone:"+919812345011"}],
+  "Madhya Pradesh":[{name:"Vikram Patel",location:"Bhopal",phone:"+919812345012"}],
+  "Maharashtra":[{name:"Rajesh Patil",location:"Pune",phone:"+919812345013"}],
+  "Manipur":[{name:"Leima Devi",location:"Imphal",phone:"+919812345014"}],
+  "Meghalaya":[{name:"D. Kharkongor",location:"Shillong",phone:"+919812345015"}],
+  "Mizoram":[{name:"Lalhmingthanga",location:"Aizawl",phone:"+919812345016"}],
+  "Nagaland":[{name:"Neikha Jamir",location:"Kohima",phone:"+919812345017"}],
+  "Odisha":[{name:"Subash Das",location:"Bhubaneswar",phone:"+919812345018"}],
+  "Punjab":[{name:"Amrit Singh",location:"Chandigarh",phone:"+919812345019"}],
+  "Rajasthan":[{name:"Ramesh Choudhary",location:"Jaipur",phone:"+919812345020"}],
+  "Sikkim":[{name:"Pema Sherpa",location:"Gangtok",phone:"+919812345021"}],
+  "Tamil Nadu":[{name:"Karthik Raj",location:"Chennai",phone:"+919812345022"}],
+  "Telangana":[{name:"Sandeep Reddy",location:"Hyderabad",phone:"+919812345023"}],
+  "Tripura":[{name:"Anup Kumar",location:"Agartala",phone:"+919812345024"}],
+  "Uttar Pradesh":[{name:"Amit Singh",location:"Lucknow",phone:"+919812345025"}],
+  "Uttarakhand":[{name:"Deepak Rawat",location:"Dehradun",phone:"+919812345026"}],
+  "West Bengal":[{name:"Suman Ghosh",location:"Kolkata",phone:"+919812345027"}],
+  "Delhi":[{name:"Rohit Verma",location:"Delhi",phone:"+919812345028"}],
+  "Jammu & Kashmir":[{name:"Rashid Bhat",location:"Srinagar",phone:"+919812345029"}],
+  "Ladakh":[{name:"Tsering Namgyal",location:"Leh",phone:"+919812345030"}],
+  "Chandigarh":[{name:"Navdeep Kaur",location:"Chandigarh",phone:"+919812345031"}],
+  "Puducherry":[{name:"Arun Raj",location:"Puducherry",phone:"+919812345032"}],
+  "Andaman & Nicobar Islands":[{name:"Rajeshwari Devi",location:"Port Blair",phone:"+919812345033"}],
+  "Dadra & Nagar Haveli":[{name:"Vikram Shah",location:"Silvassa",phone:"+919812345034"}],
+  "Daman & Diu":[{name:"Anil Patel",location:"Daman",phone:"+919812345035"}],
+  "Lakshadweep":[{name:"Faisal Ali",location:"Kavaratti",phone:"+919812345036"}]
+};
+
+const stateSelect = document.getElementById("stateSelect");
+const officerContainer = document.getElementById("officerContainer");
+
+stateSelect.addEventListener("change", () => {
+  const state = stateSelect.value;
+  officerContainer.innerHTML = "";
+
+  if(officers[state] && officers[state].length > 0){
+    officers[state].forEach(officer => {
+      const card = document.createElement("div");
+      card.className = "officer-card";
+      card.innerHTML = `
+        <h3>${officer.name}</h3>
+        <p>Location: ${officer.location}</p>
+        <p>Phone: <a href="tel:${officer.phone}">${officer.phone}</a></p>
+        <button class="contact-btn" onclick="window.location.href='tel:${officer.phone}'">Call</button>
+      `;
+      officerContainer.appendChild(card);
+    });
+  } else if(state){
+    officerContainer.innerHTML = "<p>No officers found for this state/UT.</p>";
+  }
+});
+</script>
+
+</body>
+</html>
