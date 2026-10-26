@@ -1,0 +1,246 @@
+# Decision rules evaluated by the fusion engine against a FarmContext.
+#
+# when:        every condition must hold. A list means "value is one of"; a mapping
+#              can use gte / lte / not_in; true/false compares booleans. A context
+#              value that is missing (None) never satisfies a condition.
+# crop:        "*" for all crops or a list of crop keys.
+# suppresses:  rule ids that are dropped when this rule fires (conflict resolution).
+# urgency, impact, confidence: 0..1, multiplied into the ranking score.
+# title / rationale: str.format templates over FarmContext fields.
+#
+# These rules are illustrative decision support, not validated agronomic prescriptions.
+
+# ---------------- irrigation ----------------
+- id: delay_irrigation_rain
+  crop: "*"
+  action_type: irrigation
+  when:
+    irrigation_type: {not_in: [rainfed]}
+    soil_moisture_level: [adequate, wet]
+    rain_outlook: [high]
+  title: Delay irrigation
+  rationale: "Soil moisture is {soil_moisture_level} and rain is likely in the next 48 hours ({rain_prob_48h:.0f}% chance, about {rain_mm_48h:g} mm)."
+  urgency: 0.9
+  impact: 0.8
+  confidence: 0.9
+  suppresses: [irrigate_now, irrigate_light_before_rain]
+
+- id: irrigate_now
+  crop: "*"
+  action_type: irrigation
+  when:
+    irrigation_type: {not_in: [rainfed]}
+    soil_moisture_level: [dry]
+    rain_outlook: [low, moderate]
+  title: Irrigate in the next 24 hours
+  rationale: "Topsoil is dry for {crop_label} at the {crop_stage_label} stage and little rain is expected ({rain_prob_48h:.0f}% chance)."
+  urgency: 0.95
+  impact: 0.85
+  confidence: 0.85
+
+- id: irrigate_light_before_rain
+  crop: "*"
+  action_type: irrigation
+  when:
+    irrigation_type: {not_in: [rainfed]}
+    soil_moisture_level: [dry]
+    rain_outlook: [high]
+  title: Give only a light irrigation
+  rationale: "Topsoil is dry but rain is likely soon ({rain_prob_48h:.0f}% chance); a light watering avoids stress without wasting water."
+  urgency: 0.6
+  impact: 0.6
+  confidence: 0.7
+
+- id: check_drainage
+  crop: [tomato, wheat, maize, cotton, onion, sugarcane]
+  action_type: irrigation
+  when:
+    soil_moisture_level: [wet]
+    rain_outlook: [high]
+  title: Check field drainage
+  rationale: "Soil is already wet and more rain is likely ({rain_mm_48h:g} mm expected). Clear channels to avoid waterlogging."
+  urgency: 0.7
+  impact: 0.65
+  confidence: 0.8
+
+- id: heat_stress
+  crop: "*"
+  action_type: irrigation
+  when:
+    temp_max_48h: {gte: 38}
+    soil_moisture_level: [dry, adequate]
+  title: Protect the crop from heat stress
+  rationale: "Temperatures up to {temp_max_48h:.0f}°C are forecast. Irrigate in the evening or early morning if possible."
+  urgency: 0.8
+  impact: 0.7
+  confidence: 0.8
+
+# ---------------- nutrients ----------------
+- id: apply_nitrogen
+  crop: "*"
+  action_type: nutrient
+  when:
+    n_level: [low]
+    nitrogen_window: true
+    heavy_rain_48h: false
+  title: Apply nitrogen as per validated agronomic guidance
+  rationale: "Soil nitrogen is low and {crop_label} is at the {crop_stage_label} stage, when it responds to nitrogen. Follow the dose on your Soil Health Card or from your KVK."
+  urgency: 0.8
+  impact: 0.85
+  confidence: 0.9
+
+- id: postpone_fertiliser_heavy_rain
+  crop: "*"
+  action_type: nutrient
+  when:
+    n_level: [low]
+    nitrogen_window: true
+    heavy_rain_48h: true
+  title: Postpone fertiliser until the heavy rain passes
+  rationale: "Soil nitrogen is low, but about {rain_mm_48h:g} mm of rain is expected in 48 hours, which can wash fertiliser away."
+  urgency: 0.75
+  impact: 0.75
+  confidence: 0.85
+  suppresses: [apply_nitrogen]
+
+- id: phosphorus_low_early
+  crop: "*"
+  action_type: nutrient
+  when:
+    p_level: [low]
+    crop_day: {lte: 30}
+  title: Plan phosphorus application
+  rationale: "Available phosphorus is low and the crop is young (day {crop_day}), when phosphorus matters most for roots."
+  urgency: 0.6
+  impact: 0.7
+  confidence: 0.8
+
+- id: potassium_low
+  crop: "*"
+  action_type: nutrient
+  when:
+    k_level: [low]
+  title: Consider potassium as per soil test
+  rationale: "Available potassium is low on your soil test. Potassium supports fruit/grain quality and stress tolerance."
+  urgency: 0.45
+  impact: 0.6
+  confidence: 0.75
+
+- id: soil_acidic
+  crop: "*"
+  action_type: soil
+  when:
+    ph_level: [acidic]
+  title: Ask your KVK about liming
+  rationale: "Soil pH is acidic, which can lock up nutrients. Liming should be based on a lime-requirement test."
+  urgency: 0.3
+  impact: 0.6
+  confidence: 0.75
+
+- id: soil_alkaline
+  crop: "*"
+  action_type: soil
+  when:
+    ph_level: [alkaline]
+  title: Ask your KVK about gypsum / organic matter
+  rationale: "Soil pH is alkaline. Gypsum or organic matter may help, depending on a soil test."
+  urgency: 0.3
+  impact: 0.6
+  confidence: 0.75
+
+# ---------------- pest / disease ----------------
+- id: pest_high
+  crop: "*"
+  action_type: pest
+  when:
+    pest_risk: [high]
+  title: High disease risk — inspect the crop today
+  rationale: "Weather in the next 3 days strongly favours {threats}. Inspect leaves and follow your KVK's recommended protection."
+  urgency: 0.95
+  impact: 0.9
+  confidence: 0.75
+  suppresses: [pest_moderate]
+
+- id: pest_moderate
+  crop: "*"
+  action_type: pest
+  when:
+    pest_risk: [moderate]
+  title: Monitor disease risk
+  rationale: "Humid conditions in the forecast moderately favour {threats}. Check the crop every 2–3 days."
+  urgency: 0.7
+  impact: 0.8
+  confidence: 0.9
+
+- id: no_spray_before_rain
+  crop: "*"
+  action_type: pest
+  when:
+    pest_risk: [moderate, high]
+    rain_outlook: [high]
+  title: Avoid spraying just before rain
+  rationale: "Rain is likely ({rain_prob_48h:.0f}% chance) and would wash off sprays. Spray in a dry window if needed."
+  urgency: 0.55
+  impact: 0.5
+  confidence: 0.85
+
+# ---------------- harvest / market ----------------
+- id: market_rising
+  crop: "*"
+  action_type: market
+  when:
+    price_trend: [rising]
+  title: Consider harvest / market timing
+  rationale: "Mandi prices for {crop_label} are up {price_pct_change:g}% over 14 days (now about ₹{latest_modal_price:g}/quintal). Plan harvest and sale to use the trend."
+  urgency: 0.5
+  impact: 0.7
+  confidence: 0.8
+
+- id: harvest_window_rising
+  crop: "*"
+  action_type: market
+  when:
+    in_harvest_window: true
+    price_trend: [rising]
+  title: Stagger harvest and sale to catch rising prices
+  rationale: "The crop is in its harvest window and prices are up {price_pct_change:g}% over 14 days."
+  urgency: 0.75
+  impact: 0.8
+  confidence: 0.75
+  suppresses: [market_rising]
+
+- id: harvest_window_falling
+  crop: "*"
+  action_type: market
+  when:
+    in_harvest_window: true
+    price_trend: [falling]
+  title: Prices are falling — sell early or consider storage
+  rationale: "The crop is in its harvest window and prices are down {price_pct_change:g}% over 14 days."
+  urgency: 0.75
+  impact: 0.8
+  confidence: 0.75
+
+- id: prepare_harvest
+  crop: "*"
+  action_type: harvest
+  when:
+    in_harvest_window: false
+    days_to_harvest_window: {gte: 1, lte: 10}
+  title: Prepare for harvest
+  rationale: "The harvest window opens in about {days_to_harvest_window} days. Arrange labour, bags and transport."
+  urgency: 0.5
+  impact: 0.6
+  confidence: 0.8
+
+# ---------------- data gaps ----------------
+- id: add_soil_test
+  crop: "*"
+  action_type: data
+  when:
+    n_level: {missing: true}
+  title: Add your Soil Health Card values
+  rationale: "Without soil nutrient values, fertiliser advice cannot be personalised."
+  urgency: 0.4
+  impact: 0.5
+  confidence: 1.0

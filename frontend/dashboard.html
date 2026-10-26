@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farmer Dashboard - Agrisathi</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0; padding: 0;
+    background: linear-gradient(to bottom, #e8f5e9, #f4f9f4);
+    display: flex; flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: #2e7d32;
+    color: white;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  header .profile { display: flex; align-items: center; gap: 10px; }
+  header img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid white; }
+  header .farm-name { font-size: 0.8rem; opacity: 0.85; display: block; }
+  header button { padding: 6px 14px; border: none; border-radius: 30px; background: #d9534f; color: white; cursor: pointer; font-weight: bold; transition: 0.3s; font-family: inherit; }
+  header button:hover { background: #c9302c; }
+
+  main { flex: 1; padding: 15px 20px; display: flex; flex-direction: column; gap: 20px; }
+
+  /* AI Query Card */
+  #aiQueryCard {
+    background: #ffffff; padding: 25px; border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; transition: 0.3s; cursor: pointer;
+  }
+  #aiQueryCard:hover { transform: scale(1.02); box-shadow: 0 6px 14px rgba(0,0,0,0.2); }
+  #aiQueryCard h2 { margin: 0; color: #2e7d32; }
+
+  /* Dropdown Menu */
+  .dropdown { position: relative; display: inline-block; margin-left: auto; }
+  .dropbtn { background: #256608 !important; color: white; padding: 10px 16px; font-size: 14px; border: none; border-radius: 50px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.3s; }
+  .dropdown-content { display: none; position: absolute; right: 0; background-color: #f1f1f1; min-width: 190px; border-radius: 12px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2); z-index: 1; overflow: hidden; }
+  .dropdown-content button { width: 100%; padding: 10px; border: none; border-radius: 0; background: none; text-align: left; cursor: pointer; transition: 0.3s; color: #2e7d32; font-weight: normal; }
+  .dropdown-content button:hover { background: #dcedc8; }
+  .dropdown:hover .dropdown-content { display: block; }
+
+  .panel { background: #ffffffcc; padding: 15px; border-radius: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); }
+  .panel h3 { margin-top: 0; color: #2e7d32; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .panel h3 a { font-size: 0.85rem; font-weight: 600; color: #2e7d32; }
+  .muted { color: #777; font-size: 0.85rem; }
+
+  /* Decisions */
+  .decision { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-top: 1px solid #e0e0e0; }
+  .decision:first-of-type { border-top: none; }
+  .decision .rank { flex: 0 0 32px; height: 32px; border-radius: 50%; background: #2e7d32; color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+  .decision .body { flex: 1; }
+  .decision h4 { margin: 0 0 2px; color: #333; }
+  .decision p { margin: 0; color: #555; font-size: 0.9rem; }
+  .decision .btns { display: flex; gap: 6px; margin-top: 6px; }
+  .decision .btns button { padding: 5px 12px; border-radius: 20px; border: 1px solid #2e7d32; background: white; color: #2e7d32; cursor: pointer; font-family: inherit; font-size: 0.8rem; }
+  .decision .btns button.primary { background: #2e7d32; color: white; }
+  .tag { display: inline-block; font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; background: #e8f5e9; color: #2e7d32; margin-left: 6px; }
+
+  /* Quick Stats Cards */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
+  .stat-card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); text-align: center; }
+  .stat-card h3 { margin: 0; color: #2e7d32; font-size: 1rem; }
+  .stat-card p { margin: 5px 0 0; font-size: 0.9rem; color: #555; }
+
+  /* Weather */
+  .forecast { display: flex; gap: 10px; margin-top: 10px; overflow-x: auto; }
+  .forecast .day { flex: 1 0 95px; text-align: center; background: #e8f5e9; border-radius: 10px; padding: 10px; font-size: 0.85rem; }
+  .forecast .day h4 { margin: 0 0 4px; }
+  .forecast .day p { margin: 2px 0; }
+
+  /* Live Prices */
+  .price-card { display: inline-block; margin: 0 12px 8px 0; padding: 8px 12px; background: #e8f5e9; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: 600; }
+
+  /* Tips Carousel */
+  #tipsCarousel { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  #tipsCarousel img { width: 100%; max-height: 200px; border-radius: 12px; object-fit: contain; }
+  #tipsCarousel p { margin: 0; color: #2e7d32; font-weight: 600; text-align: center; }
+
+  #alerts ul { padding-left: 20px; margin: 8px 0 0; }
+
+  footer { text-align: center; padding: 12px; background: #f0f0f0; font-size: 12px; color: #555; }
+
+  @media (max-width: 480px){ .dropbtn { font-size: 12px; padding: 8px 12px; } .stats-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="profile">
+    <img src="https://res.cloudinary.com/dxt4kt6b3/image/upload/v1756712892/indian-farmer-with-crops-illustration-for-your-design-vector_d5jc5b.jpg" alt="Profile Avatar" id="profileAvatar">
+    <div>
+      <span id="profileName">Farmer</span>
+      <span class="farm-name" id="farmName"></span>
+    </div>
+  </div>
+
+  <div class="dropdown">
+    <button class="dropbtn">Menu ▼</button>
+    <div class="dropdown-content">
+      <button data-href="decisions.html">✅ Today's Decisions</button>
+      <button data-href="farm.html">🌱 My Farm</button>
+      <button data-href="schemes.html">📜 Government Schemes</button>
+      <button data-href="mandi.html">💹 Mandi Prices</button>
+      <button data-href="tutorials.html">🎥 Tutorials</button>
+      <button data-href="contact.html">📞 Contact Officer</button>
+    </div>
+  </div>
+
+  <button onclick="logout()">Logout</button>
+</header>
+
+<main>
+  <!-- AI Query -->
+  <div id="aiQueryCard">
+    <h2>📝 Ask AI Query</h2>
+    <p>Click here to get answers for your farming questions</p>
+  </div>
+
+  <!-- Decisions -->
+  <div class="panel" id="decisionsPanel">
+    <h3>✅ Today's decisions <a href="decisions.html">See all &amp; why →</a></h3>
+    <div id="decisionsList"><p class="muted">Loading recommendations…</p></div>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="stats-grid">
+    <div class="stat-card"><h3 id="statStage">—</h3><p>Crop stage</p></div>
+    <div class="stat-card"><h3 id="statOpen">—</h3><p>Open actions</p></div>
+    <div class="stat-card"><h3 id="statAcceptance">—</h3><p>Advice accepted</p></div>
+    <div class="stat-card"><h3 id="statQueries">—</h3><p>Questions asked</p></div>
+  </div>
+
+  <div class="panel">
+    <h3 id="weatherTitle">🌤️ Weather Forecast</h3>
+    <div class="forecast" id="forecast"><p class="muted">Loading forecast…</p></div>
+  </div>
+
+  <!-- Live Prices -->
+  <div class="panel">
+    <h3 id="pricesTitle">💹 Mandi Prices <a href="mandi.html">More →</a></h3>
+    <div id="livePricesContainer"><p class="muted">Loading prices…</p></div>
+  </div>
+
+  <!-- Alerts derived from farm signals -->
+  <div class="panel" id="alerts">
+    <h3>🔔 Farm alerts</h3>
+    <ul id="alertsList"><li class="muted">Loading…</li></ul>
+  </div>
+
+  <!-- Tips Carousel -->
+  <div class="panel" id="tipsCarousel">
+    <img id="tipImage" src="" alt="Tip Image">
+    <p id="tipText"></p>
+  </div>
+</main>
+
+<footer>
+  &copy; 2026 Agrisathi | Decision support, not a substitute for your Krishi officer
+</footer>
+
+<script src="api.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!Api.requireAuth()) return;
+  window.logout = () => { if (confirm("Are you sure you want to logout?")) Api.logout(); };
+
+  // Navigation
+  document.getElementById("aiQueryCard").onclick = () => location.href = "query.html";
+  document.querySelectorAll(".dropdown-content button").forEach(b => b.onclick = () => location.href = b.dataset.href);
+
+  startTips();
+
+  const user = Api.user();
+  document.getElementById("profileName").innerText = user?.name || "Farmer";
+
+  const farm = await Api.currentFarm();
+  if (!farm || !farm.active_cycle) { location.href = "farm.html"; return; }
+  document.getElementById("farmName").innerText = `${farm.name} · ${farm.district ? farm.district + ", " : ""}${farm.state}`;
+
+  // stats count recommendations, so wait for the first run to be generated
+  loadDecisions(farm).then(loadStats);
+  loadSignals(farm);
+});
+
+async function loadDecisions(farm) {
+  const list = document.getElementById("decisionsList");
+  try {
+    const data = await Api.get(`/farms/${farm.id}/recommendations`);
+    const open = data.recommendations.filter(r => r.status === "shown" || r.status === "accepted");
+    if (!open.length) { list.innerHTML = '<p class="muted">No pending actions. Check back after the next forecast.</p>'; return; }
+    list.innerHTML = open.slice(0, 3).map(r => `
+      <div class="decision" data-id="${r.id}">
+        <div class="rank">${r.rank}</div>
+        <div class="body">
+          <h4>${esc(r.title)}${r.status === "accepted" ? '<span class="tag">accepted</span>' : ""}</h4>
+          <p>${esc(r.rationale)}</p>
+          ${r.status === "shown" ? `<div class="btns">
+            <button class="primary" data-action="accept">👍 Will do</button>
+            <button data-action="reject">Not useful</button>
+          </div>` : ""}
+        </div>
+      </div>`).join("");
+    list.querySelectorAll("button[data-action]").forEach(btn => btn.onclick = async () => {
+      const id = btn.closest(".decision").dataset.id;
+      await Api.post(`/recommendations/${id}/feedback`, { action: btn.dataset.action });
+      loadDecisions(farm);
+      loadStats();
+    });
+  } catch (err) {
+    list.innerHTML = `<p class="muted">Could not load recommendations: ${esc(err.message)}</p>`;
+  }
+}
+
+async function loadSignals(farm) {
+  const forecastEl = document.getElementById("forecast");
+  const alertsEl = document.getElementById("alertsList");
+  try {
+    const data = await Api.get(`/farms/${farm.id}/signals`);
+    const ctx = data.context;
+    document.getElementById("statStage").innerText = ctx.crop_stage_label || "—";
+    document.getElementById("weatherTitle").innerText = `🌤️ Weather Forecast - ${farm.district || farm.state}`;
+
+    forecastEl.innerHTML = data.forecast.length ? data.forecast.map(d => `
+      <div class="day">
+        <h4>${esc(d.weekday)}</h4>
+        <p>${d.icon} ${esc(d.label)}</p>
+        <p>${Math.round(d.t_max)}°C / ${Math.round(d.t_min)}°C</p>
+        <p>🌧️ ${d.rain_prob ?? "—"}% · ${d.rain_mm ?? 0} mm</p>
+      </div>`).join("") : '<p class="muted">Weather service unavailable right now.</p>';
+
+    const alerts = [];
+    if (ctx.rain_outlook === "high") alerts.push(`Rain likely in the next 48 hours (${ctx.rain_prob_48h}% chance).`);
+    if (ctx.heavy_rain_48h) alerts.push(`Heavy rain expected: about ${ctx.rain_mm_48h} mm.`);
+    if (ctx.temp_max_48h >= 38) alerts.push(`Heat alert: up to ${Math.round(ctx.temp_max_48h)}°C.`);
+    if (ctx.pest_risk === "high" || ctx.pest_risk === "moderate")
+      alerts.push(`${ctx.pest_risk === "high" ? "High" : "Moderate"} disease risk: ${ctx.pest_threats.join(", ")}.`);
+    if (ctx.price_trend === "rising" || ctx.price_trend === "falling")
+      alerts.push(`Market: ${ctx.crop_label} prices ${ctx.price_trend} (${ctx.price_pct_change > 0 ? "+" : ""}${ctx.price_pct_change}% in 14 days).`);
+    if (!ctx.n_level) alerts.push('Add your Soil Health Card values on <a href="farm.html">My Farm</a> for fertiliser advice.');
+    alertsEl.innerHTML = alerts.length ? alerts.map(a => `<li>${a}</li>`).join("") : "<li>No alerts right now.</li>";
+
+    loadPrices(farm, ctx);
+  } catch (err) {
+    forecastEl.innerHTML = `<p class="muted">${esc(err.message)}</p>`;
+    alertsEl.innerHTML = "";
+  }
+}
+
+async function loadPrices(farm, ctx) {
+  const container = document.getElementById("livePricesContainer");
+  const crops = await Api.get("/market/options");
+  const commodity = crops.commodities.find(c => c.crop === ctx.crop)?.commodity;
+  const data = await Api.get(`/market/prices?state=${encodeURIComponent(farm.state)}&commodity=${encodeURIComponent(commodity)}`);
+  document.getElementById("pricesTitle").firstChild.textContent = `💹 ${ctx.crop_label} prices in ${farm.state} `;
+  if (!data.prices.length) { container.innerHTML = '<p class="muted">No mandi prices for this crop in your state yet.</p>'; return; }
+  const sample = data.prices.some(p => p.source === "sample");
+  container.innerHTML = data.prices.map(p =>
+    `<div class="price-card">${esc(p.market)}: ₹${Math.round(p.modal_price)}/quintal</div>`).join("")
+    + (sample ? '<p class="muted">Sample prices — add a data.gov.in API key for live Agmarknet data.</p>' : "");
+}
+
+async function loadStats() {
+  const s = await Api.get("/me/stats");
+  document.getElementById("statOpen").innerText = s.open_recommendations;
+  document.getElementById("statQueries").innerText = s.queries;
+  document.getElementById("statAcceptance").innerText = s.acceptance_rate === null ? "—" : `${Math.round(s.acceptance_rate * 100)}%`;
+}
+
+function startTips() {
+  const tips = [
+    { img: "https://res.cloudinary.com/dxt4kt6b3/image/upload/v1756714390/Farmers_ijeyuh.jpg", tip: "Water crops early morning to reduce evaporation." },
+    { img: "https://res.cloudinary.com/dxt4kt6b3/image/upload/v1756714390/Organic-Farming-1024x576_w610t3.webp", tip: "Use organic fertilizers for better yield." },
+    { img: "https://res.cloudinary.com/dxt4kt6b3/image/upload/v1756714389/images_1_vwi35y.jpg", tip: "Rotate crops to maintain soil fertility." }
+  ];
+  let currentTip = 0;
+  const tipImage = document.getElementById("tipImage");
+  const tipText = document.getElementById("tipText");
+  function showTip() {
+    tipImage.src = tips[currentTip].img;
+    tipText.innerText = tips[currentTip].tip;
+  }
+  showTip();
+  setInterval(() => { currentTip = (currentTip + 1) % tips.length; showTip(); }, 5000);
+}
+</script>
+</body>
+</html>

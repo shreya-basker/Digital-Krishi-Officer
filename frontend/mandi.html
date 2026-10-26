@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mandi Prices - Agrisathi</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body { font-family:'Poppins', sans-serif; margin:0; padding:0; background:#f4f9f4; }
+  header { background:#2e7d32; color:white; padding:15px; text-align:center; font-size:1.5rem; }
+  main { padding:15px; max-width:800px; margin:auto; }
+
+  input, select {
+    width:100%; padding:10px; margin-bottom:15px; border-radius:10px; border:1px solid #ccc; font-size:1rem; font-family:inherit;
+  }
+
+  .trend { padding:12px 15px; margin-bottom:15px; border-radius:12px; font-weight:600; }
+  .trend.rising { background:#e8f5e9; color:#2e7d32; }
+  .trend.falling { background:#ffebee; color:#c62828; }
+  .trend.flat { background:#f5f5f5; color:#555; }
+  .trend small { display:block; font-weight:normal; font-size:0.85rem; }
+
+  .mandi-card {
+    background:white; padding:15px; margin-bottom:15px; border-radius:12px; box-shadow:0 3px 8px rgba(0,0,0,0.1);
+  }
+  .mandi-card h3 { margin:0 0 5px; color:#2e7d32; }
+  .mandi-card p { margin:3px 0; font-size:0.95rem; color:#555; }
+  .note { font-size:0.85rem; color:#777; }
+
+  button.back { display:block; margin:15px auto; padding:10px 20px; background:#2e7d32; color:white; border:none; border-radius:30px; cursor:pointer; transition:0.3s; font-family:inherit; }
+  button.back:hover { background:#256608; }
+</style>
+</head>
+<body>
+
+<header>💹 Mandi Prices</header>
+
+<main>
+  <select id="stateSelect">
+    <option value="">-- Select State --</option>
+  </select>
+
+  <select id="cropSelect">
+    <option value="">-- Select Crop --</option>
+  </select>
+
+  <div id="trendBox"></div>
+  <div id="mandiContainer"></div>
+
+  <button class="back" onclick="window.location.href='dashboard.html'">⬅ Back to Dashboard</button>
+</main>
+
+<script src="api.js"></script>
+<script>
+const stateSelect = document.getElementById("stateSelect");
+const cropSelect = document.getElementById("cropSelect");
+const trendBox = document.getElementById("trendBox");
+const mandiContainer = document.getElementById("mandiContainer");
+const TREND_TEXT = { rising: "📈 Prices rising", falling: "📉 Prices falling", flat: "➡️ Prices steady" };
+
+async function init() {
+  const options = await Api.get("/market/options");
+  // states with stored prices first, then the rest (live data can fill them when a key is set)
+  const states = [...options.states, ...INDIAN_STATES.filter(s => !options.states.includes(s))];
+  stateSelect.innerHTML += states.map(s => `<option>${esc(s)}</option>`).join("");
+  cropSelect.innerHTML += options.commodities.map(c => `<option value="${esc(c.commodity)}">${esc(c.label)}</option>`).join("");
+
+  // default to the farmer's own state and crop
+  if (Api.token()) {
+    try {
+      const farm = await Api.currentFarm();
+      if (farm) {
+        stateSelect.value = farm.state;
+        const own = options.commodities.find(c => c.crop === farm.active_cycle?.crop);
+        if (own) cropSelect.value = own.commodity;
+      }
+    } catch { /* browsing prices works without a farm */ }
+  }
+  showMandi();
+}
+
+async function showMandi() {
+  const state = stateSelect.value;
+  const commodity = cropSelect.value;
+  trendBox.innerHTML = "";
+  mandiContainer.innerHTML = "";
+  if (!state || !commodity) return;
+
+  mandiContainer.innerHTML = "<p>Loading…</p>";
+  const data = await Api.get(`/market/prices?state=${encodeURIComponent(state)}&commodity=${encodeURIComponent(commodity)}`);
+
+  if (data.trend) {
+    const t = data.trend;
+    trendBox.innerHTML = `<div class="trend ${t.trend}">${TREND_TEXT[t.trend]}
+      <small>${t.pct_change > 0 ? "+" : ""}${t.pct_change}% over the last ${t.days} days · latest average ₹${t.latest_modal}/quintal</small></div>`;
+  }
+
+  if (data.prices.length === 0) {
+    mandiContainer.innerHTML = "<p>No data available for this selection.</p>";
+    return;
+  }
+
+  mandiContainer.innerHTML = data.prices.map(m => `
+    <div class="mandi-card">
+      <h3>${esc(m.market)}</h3>
+      <p>District: ${esc(m.district)}${m.variety ? ` · Variety: ${esc(m.variety)}` : ""}</p>
+      <p>Modal price: <strong>₹${Math.round(m.modal_price)}/quintal</strong> (₹${Math.round(m.min_price)} – ₹${Math.round(m.max_price)})</p>
+      <p class="note">Date: ${esc(m.arrival_date)} · ${m.source === "sample" ? "Sample data" : "Agmarknet"}</p>
+    </div>`).join("");
+}
+
+stateSelect.addEventListener("change", showMandi);
+cropSelect.addEventListener("change", showMandi);
+init();
+</script>
+
+</body>
+</html>

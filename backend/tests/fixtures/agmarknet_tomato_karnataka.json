@@ -1,0 +1,10 @@
+{
+  "records": [
+    {"state": "Karnataka", "district": "Kolar", "market": "Kolar", "commodity": "Tomato", "variety": "Local",
+     "grade": "FAQ", "arrival_date": "25/10/2026", "min_price": "1200", "max_price": "1800", "modal_price": "1500"},
+    {"state": "Karnataka", "district": "Bangalore", "market": "Bangalore", "commodity": "Tomato", "variety": "Hybrid",
+     "grade": "FAQ", "arrival_date": "25/10/2026", "min_price": "1400", "max_price": "2000", "modal_price": "1700"},
+    {"state": "Karnataka", "district": "Mysore", "market": "Mysore", "commodity": "Tomato", "variety": "Local",
+     "grade": "FAQ", "arrival_date": "not a date", "min_price": "1300", "max_price": "1900", "modal_price": "1600"}
+  ]
+}

@@ -1,0 +1,26 @@
+state,district,market,commodity,base_price,daily_change_pct
+Karnataka,Kolar,Kolar,Tomato,1500,1.2
+Karnataka,Bangalore,Bangalore,Tomato,1650,1.0
+Karnataka,Bangalore,Bangalore,Onion,2600,-0.8
+Karnataka,Davangere,Davangere,Maize,2050,0.1
+Karnataka,Mandya,Mandya,Sugarcane,340,0.0
+Karnataka,Raichur,Raichur,Paddy(Dhan)(Common),2250,0.2
+Maharashtra,Pune,Pune,Onion,2400,-1.0
+Maharashtra,Nashik,Lasalgaon,Onion,2300,-1.1
+Maharashtra,Pune,Pune,Tomato,1400,0.9
+Maharashtra,Nagpur,Nagpur,Cotton,7100,0.3
+Maharashtra,Kolhapur,Kolhapur,Sugarcane,345,0.0
+Maharashtra,Jalgaon,Jalgaon,Maize,2000,-0.2
+Punjab,Ludhiana,Ludhiana,Wheat,2450,0.1
+Punjab,Amritsar,Amritsar,Paddy(Dhan)(Common),2320,0.0
+Punjab,Bathinda,Bathinda,Cotton,7000,0.4
+Uttar Pradesh,Lucknow,Lucknow,Tomato,1700,0.6
+Uttar Pradesh,Lucknow,Lucknow,Wheat,2400,0.1
+Uttar Pradesh,Kanpur,Kanpur,Wheat,2380,0.0
+Uttar Pradesh,Muzaffarnagar,Muzaffarnagar,Sugarcane,350,0.0
+Uttar Pradesh,Bahraich,Bahraich,Maize,1950,-0.4
+Kerala,Ernakulam,Ernakulam,Tomato,2200,0.8
+Kerala,Palakkad,Palakkad,Paddy(Dhan)(Common),2800,0.0
+Tamil Nadu,Coimbatore,Coimbatore,Tomato,1600,1.1
+Tamil Nadu,Coimbatore,Coimbatore,Maize,2100,0.2
+Tamil Nadu,Thanjavur,Thanjavur,Paddy(Dhan)(Common),2300,0.1

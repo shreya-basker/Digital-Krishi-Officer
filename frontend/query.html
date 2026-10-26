@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ask Your Query - Digital Krishi Mitra</title>
+<title>Ask Your Query - Agrisathi</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
   body {
@@ -111,6 +111,8 @@
     background: #256608;
   }
 
+  button:disabled { background: #9e9e9e; cursor: wait; }
+
   #backBtn {
     background: #555;
     margin: 10px auto;
@@ -140,13 +142,12 @@
 </head>
 <body>
 
-<header>🌾 Digital Krishi Mitra</header>
+<header>🌾 Agrisathi Assistant</header>
 
 <!-- Chat Container -->
 <div id="chatContainer">
   <div class="chat-bubble ai">
-    Hello! How can I assist you with farming today?
-    <div class="timestamp" style="text-align:left;">{{now}}</div>
+    Hello! Ask me about your crop, soil, weather, pests or prices. I already know your farm details.
   </div>
 </div>
 
@@ -162,11 +163,7 @@
 
 <button id="backBtn" onclick="window.location.href='dashboard.html'">⬅ Back to Dashboard</button>
 
-<!-- Firebase v8 SDK -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-
+<script src="api.js"></script>
 <!-- Query Logic -->
 <script src="query.js"></script>
 </body>

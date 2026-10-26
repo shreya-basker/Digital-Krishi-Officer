@@ -1,0 +1,96 @@
+# Crop calendars used to derive crop stage from the sowing / transplanting date.
+# Day ranges are typical Indian-season durations for planning only; real stages
+# depend on variety, season and region. Soil-moisture thresholds are volumetric
+# (m3/m3) for the 3-9 cm layer of a medium loam and are deliberately generic.
+
+tomato:
+  label: Tomato
+  market_name: Tomato
+  stages:
+    - {key: establishment, label: Establishment, start: 0, end: 20}
+    - {key: vegetative, label: Vegetative, start: 21, end: 40}
+    - {key: flowering, label: Flowering, start: 41, end: 60}
+    - {key: fruiting, label: Fruit development, start: 61, end: 85}
+    - {key: harvest, label: Harvest, start: 86, end: 130}
+  harvest_window: [75, 130]
+  nitrogen_stages: [vegetative, flowering]
+  soil_moisture: {dry_below: 0.18, wet_above: 0.34}
+
+rice:
+  label: Rice (paddy)
+  market_name: Paddy(Dhan)(Common)
+  stages:
+    - {key: establishment, label: Seedling / establishment, start: 0, end: 20}
+    - {key: tillering, label: Tillering, start: 21, end: 55}
+    - {key: panicle_initiation, label: Panicle initiation, start: 56, end: 85}
+    - {key: flowering, label: Flowering, start: 86, end: 100}
+    - {key: grain_filling, label: Grain filling, start: 101, end: 120}
+    - {key: harvest, label: Maturity / harvest, start: 121, end: 140}
+  harvest_window: [110, 140]
+  nitrogen_stages: [tillering, panicle_initiation]
+  soil_moisture: {dry_below: 0.30, wet_above: 0.45}
+
+wheat:
+  label: Wheat
+  market_name: Wheat
+  stages:
+    - {key: establishment, label: Crown root initiation, start: 0, end: 25}
+    - {key: tillering, label: Tillering, start: 26, end: 45}
+    - {key: jointing, label: Jointing, start: 46, end: 70}
+    - {key: flowering, label: Heading / flowering, start: 71, end: 90}
+    - {key: grain_filling, label: Grain filling, start: 91, end: 115}
+    - {key: harvest, label: Maturity / harvest, start: 116, end: 140}
+  harvest_window: [110, 140]
+  nitrogen_stages: [establishment, tillering]
+  soil_moisture: {dry_below: 0.17, wet_above: 0.34}
+
+maize:
+  label: Maize
+  market_name: Maize
+  stages:
+    - {key: establishment, label: Emergence, start: 0, end: 20}
+    - {key: vegetative, label: Vegetative, start: 21, end: 50}
+    - {key: flowering, label: Tasseling / silking, start: 51, end: 65}
+    - {key: grain_filling, label: Grain filling, start: 66, end: 95}
+    - {key: harvest, label: Maturity / harvest, start: 96, end: 120}
+  harvest_window: [90, 120]
+  nitrogen_stages: [vegetative]
+  soil_moisture: {dry_below: 0.17, wet_above: 0.34}
+
+cotton:
+  label: Cotton
+  market_name: Cotton
+  stages:
+    - {key: establishment, label: Seedling, start: 0, end: 30}
+    - {key: vegetative, label: Squaring, start: 31, end: 60}
+    - {key: flowering, label: Flowering, start: 61, end: 100}
+    - {key: boll_development, label: Boll development, start: 101, end: 145}
+    - {key: harvest, label: Picking, start: 146, end: 190}
+  harvest_window: [140, 190]
+  nitrogen_stages: [vegetative, flowering]
+  soil_moisture: {dry_below: 0.16, wet_above: 0.34}
+
+sugarcane:
+  label: Sugarcane
+  market_name: Sugarcane
+  stages:
+    - {key: establishment, label: Germination, start: 0, end: 35}
+    - {key: tillering, label: Tillering, start: 36, end: 120}
+    - {key: grand_growth, label: Grand growth, start: 121, end: 270}
+    - {key: maturity, label: Maturity, start: 271, end: 330}
+    - {key: harvest, label: Harvest, start: 331, end: 400}
+  harvest_window: [300, 400]
+  nitrogen_stages: [tillering, grand_growth]
+  soil_moisture: {dry_below: 0.20, wet_above: 0.36}
+
+onion:
+  label: Onion
+  market_name: Onion
+  stages:
+    - {key: establishment, label: Establishment, start: 0, end: 20}
+    - {key: vegetative, label: Leaf growth, start: 21, end: 60}
+    - {key: bulbing, label: Bulb development, start: 61, end: 100}
+    - {key: harvest, label: Maturity / harvest, start: 101, end: 130}
+  harvest_window: [95, 130]
+  nitrogen_stages: [vegetative]
+  soil_moisture: {dry_below: 0.18, wet_above: 0.34}

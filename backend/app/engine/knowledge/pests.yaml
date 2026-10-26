@@ -1,0 +1,23 @@
+# Weather conditions that favour common diseases / pests, used by the rule-based
+# pest-risk model. A threat counts the forecast hours (next 72 h) where every
+# listed bound holds; `hours` is how many such hours make the risk significant.
+# Bounds are illustrative literature-style values, not validated forecasting models.
+
+tomato:
+  - {name: Late blight, rh_min: 90, t_min: 10, t_max: 25, hours: 10}
+  - {name: Early blight, rh_min: 80, t_min: 24, t_max: 30, hours: 12}
+rice:
+  - {name: Blast, rh_min: 90, t_min: 20, t_max: 28, hours: 10}
+  - {name: Brown plant hopper, rh_min: 80, t_min: 25, t_max: 32, hours: 24}
+wheat:
+  - {name: Yellow rust, rh_min: 85, t_min: 10, t_max: 20, hours: 8}
+maize:
+  - {name: Turcicum leaf blight, rh_min: 85, t_min: 18, t_max: 27, hours: 10}
+cotton:
+  - {name: Whitefly, rh_max: 60, t_min: 28, t_max: 36, hours: 24}
+  - {name: Grey mildew, rh_min: 85, t_min: 20, t_max: 30, hours: 12}
+sugarcane:
+  - {name: Red rot, rh_min: 85, t_min: 25, t_max: 32, hours: 12}
+onion:
+  - {name: Purple blotch, rh_min: 80, t_min: 21, t_max: 30, hours: 12}
+  - {name: Thrips, rh_max: 65, t_min: 25, t_max: 35, hours: 24}

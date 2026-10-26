@@ -1,0 +1,8 @@
+# Soil Health Card style ratings (DA&FW). Nutrient values are available kg/ha.
+# A value below `low_below` is Low, above `high_above` is High, otherwise Medium.
+nitrogen: {low_below: 280, high_above: 560}
+phosphorus: {low_below: 10, high_above: 25}
+potassium: {low_below: 110, high_above: 280}
+organic_carbon: {low_below: 0.5, high_above: 0.75}
+# pH is rated acidic / neutral / alkaline instead of low / medium / high
+ph: {acidic_below: 6.5, alkaline_above: 7.5}
